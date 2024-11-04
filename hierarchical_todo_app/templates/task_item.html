@@ -1,0 +1,30 @@
+<!-- task_item.html -->
+{% macro render_task(task, level=1) %}
+<li>
+    {% if task.subtasks %}
+    <a href="{{ url_for('toggle_collapse', task_id=task.id) }}">
+        {% if task.is_collapsed() %}
+        [+]
+        {% else %}
+        [-]
+        {% endif %}
+    </a>
+    {% endif %}
+    {{ task.description }}
+    {% if not task.completed %}
+    <a href="{{ url_for('complete_task', task_id=task.id) }}">Complete</a>
+    {% endif %}
+    {% if level < 3 %} <a href="{{ url_for('add_task', list_id=task.list_id, parent_id=task.id) }}">Add Subtask</a>
+        {% endif %}
+        {% if level == 1 %}
+        <a href="{{ url_for('move_task', task_id=task.id) }}">Move Task</a>
+        {% endif %}
+        {% if task.subtasks and not task.is_collapsed() %}
+        <ul>
+            {% for subtask in task.subtasks %}
+            {{ render_task(subtask, level=level+1) }}
+            {% endfor %}
+        </ul>
+        {% endif %}
+</li>
+{% endmacro %}

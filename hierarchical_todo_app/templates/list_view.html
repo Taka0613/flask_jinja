@@ -1,0 +1,14 @@
+<!-- list_view.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ todo_list.name }}</h2>
+<a href="{{ url_for('add_task', list_id=todo_list.id) }}">Add Task</a>
+<ul>
+    {% import 'task_item.html' as task_macros %}
+    {% for task in tasks %}
+    {{ task_macros.render_task(task, level=1) }}
+    {% endfor %}
+</ul>
+<a href="{{ url_for('index') }}">Back to Lists</a>
+{% endblock %}

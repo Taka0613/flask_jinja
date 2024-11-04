@@ -1,0 +1,16 @@
+<!-- templates/move_task.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Move Task: {{ task.description }}</h2>
+<form method="post">
+    <label>Select New List:</label>
+    <select name="new_list_id">
+        {% for list in lists %}
+        <option value="{{ list.id }}">{{ list.name }}</option>
+        {% endfor %}
+    </select><br>
+    <input type="submit" value="Move Task">
+</form>
+<a href="{{ url_for('list_view', list_id=task.list_id) }}">Back to List</a>
+{% endblock %}
