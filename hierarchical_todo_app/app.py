@@ -175,5 +175,24 @@ def move_task(task_id):
     return render_template("move_task.html", task=task, lists=lists)
 
 
+@app.route("/delete_list/<int:list_id>", methods=["POST"])
+@login_required
+def delete_list(list_id):
+    """Delete a list and all its associated tasks."""
+    todo_list = List.query.filter_by(id=list_id, user_id=current_user.id).first()
+    if todo_list is None:
+        flash("List not found or you don't have permission to delete this list.")
+        return redirect(url_for("index"))
+
+    # Delete all tasks associated with the list
+    Task.query.filter_by(list_id=list_id).delete()
+    # Delete the list itself
+    db.session.delete(todo_list)
+    db.session.commit()
+
+    flash("List and all its tasks have been deleted.")
+    return redirect(url_for("index"))
+
+
 if __name__ == "__main__":
     app.run(debug=True)
